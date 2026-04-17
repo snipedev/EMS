@@ -36,3 +36,13 @@ func (s *IncidentService) GetIncidents() ([]*models.Incident, error) {
 	}
 	return incidents, nil
 }
+
+func (s *IncidentService) CloseIncident(id int) (*models.Incident, error) {
+	incident, err := s.GetIncident(id)
+	if err != nil {
+		return nil, err
+	}
+	incident.CloseEvent()
+	s.DB.Save(incident)
+	return incident, nil
+}
