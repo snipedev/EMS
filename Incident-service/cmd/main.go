@@ -18,33 +18,24 @@ func loadconfig() {
 	}
 }
 
-func AddRoutes(router *gin.Engine, handler *handlers.IncidentHandler) {
-	v1 := router.Group("/api/v1")
-	{
-		v1.POST("/incidents", handler.LogIncident)
-		v1.GET("/incidents", handler.ListIncidents)
-		v1.GET("/incidents/:id", handler.GetIncident)
-	}
-}
-
 func main() {
 	r := gin.Default()
 
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
 
-	db := db.Connect()
-	db.AutoMigrate(&models.Incident{})
-	service := internals.NewIncidentService(db)
+	DB := db.Connect()
+	DB.AutoMigrate(&models.Incident{})
+	service := internals.NewIncidentService(DB)
 
 	val := os.Getenv("API_KEY")
 
 	log.Println("API_KEY: ", val)
 
 	handler := handlers.NewIncidentHandler(service)
-	AddRoutes(r, handler)
 
 	// added for v1 endpoints
+	AddRoutes(r, handler)
 
 	r.Run(":8080")
 

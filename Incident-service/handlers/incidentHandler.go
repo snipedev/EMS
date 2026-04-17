@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -70,5 +71,28 @@ func (handler *IncidentHandler) ListIncidents(c *gin.Context) {
 	c.JSONP(http.StatusOK, gin.H{
 		"status":    "Incidents",
 		"incidents": incidents,
+	})
+}
+
+func (handler *IncidentHandler) CloseIncident(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSONP(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	incident, err := handler.service.CloseIncident(id)
+	if err != nil {
+		if err.Error() == "INCIDENT ALREADY CLOSED" {
+			c.JSONP(http.StatusAlreadyReported, gin.H{"status": "Already Closed"})
+		} else {
+			c.JSONP(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	log.Println(incident)
+
+	c.JSONP(http.StatusOK, gin.H{
+		"status":   "Incident-Closed",
+		"incident": incident,
 	})
 }

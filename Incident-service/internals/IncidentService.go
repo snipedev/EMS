@@ -1,6 +1,9 @@
 package internals
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/snipedev/ems/Incident-service/pkg/models"
 	"gorm.io/gorm"
 )
@@ -39,9 +42,15 @@ func (s *IncidentService) GetIncidents() ([]*models.Incident, error) {
 
 func (s *IncidentService) CloseIncident(id int) (*models.Incident, error) {
 	incident, err := s.GetIncident(id)
+
 	if err != nil {
 		return nil, err
 	}
+
+	if incident != nil && strings.ToLower(incident.Status) == "closed" {
+		return nil, errors.New("INCIDENT ALREADY CLOSED")
+	}
+
 	incident.CloseEvent()
 	s.DB.Save(incident)
 	return incident, nil
