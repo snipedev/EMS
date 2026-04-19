@@ -1,6 +1,6 @@
     const fastify = require('fastify')({ logger: true });
 
-    await fastify.register(require('@fastify/rate-limit'), {
+    fastify.register(require('@fastify/rate-limit'), {
     max: 100,           // max requests
     timeWindow: '1 minute'
     });
@@ -8,8 +8,9 @@
     // Register auth plugin first
     fastify.register(require('./plugins/authplugin'));
 
+    //acts as a proxy
     fastify.register(require('@fastify/reply-from'),{
-    base: 'http://localhost:8080' // Base URL for forwarding requests
+    base: 'http://localhost:8080/' // Base URL for forwarding requests
     });
 
     // Now register routes that depend on the auth plugin

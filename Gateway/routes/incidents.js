@@ -1,23 +1,29 @@
+const baseUrl = "api/v1/incidents";
+
 async function routes(fastify, options) {
   fastify.get('/incidents',{
-    preHandler: [fastify.authenticate]
+    //preHandler: [fastify.authenticate]
   },async (request, reply) => {
     // Placeholder for fetching incidents from a database or external API
-    console.log('authenticate is:', fastify.authenticate); 
-    const incidents = [
-      { id: 1, title: 'Incident 1', description: 'Description of incident 1' },
-      { id: 2, title: 'Incident 2', description: 'Description of incident 2' },
-    ];
-    return incidents;
+    //console.log('authenticate is:', fastify.authenticate); 
+    return reply.from(baseUrl);
   });
 
   fastify.post('/incidents', {
-    preHandler: [fastify.authenticate]
+    //preHandler: [fastify.authenticate]
   }, async (request, reply) => {
-    const { title, description } = request.body;
     // Placeholder for saving the new incident to a database
-    const newIncident = { id: Date.now(), title, description };
-    return newIncident;
+    console.log('authenticate is:', fastify.authenticate);
+    return reply.from(baseUrl);
+  });
+
+  fastify.get('/incidents/:id', {
+    //preHandler: [fastify.authenticate]
+  }, async (request, reply) => {
+    const { id } = request.params;
+    // Placeholder for fetching a specific incident by ID from a database or external API
+    console.log('authenticate is:', fastify.authenticate);
+    return reply.from(`${baseUrl}/${id}`);
   });
 }
 
