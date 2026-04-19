@@ -9,12 +9,12 @@ RUN apk add --no-cache git ca-certificates
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY Incident-service/ .
+COPY . .
 
 ENV CGO_ENABLED=0 GOOS=linux
 
 # Build a smaller static binary
-RUN go build -ldflags="-s -w" -o main ./cmd
+RUN go build -ldflags="-s -w" -o main ./Incident-service/cmd
 
 FROM alpine:3.18
 
