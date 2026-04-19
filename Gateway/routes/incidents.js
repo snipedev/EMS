@@ -2,7 +2,7 @@ const baseUrl = "api/v1/incidents";
 
 async function routes(fastify, options) {
   fastify.get('/incidents',{
-    //preHandler: [fastify.authenticate]
+    preHandler: [fastify.authenticate]
   },async (request, reply) => {
     // Placeholder for fetching incidents from a database or external API
     //console.log('authenticate is:', fastify.authenticate); 
@@ -10,7 +10,7 @@ async function routes(fastify, options) {
   });
 
   fastify.post('/incidents', {
-    //preHandler: [fastify.authenticate]
+    preHandler: [fastify.authenticate]
   }, async (request, reply) => {
     // Placeholder for saving the new incident to a database
     console.log('authenticate is:', fastify.authenticate);
