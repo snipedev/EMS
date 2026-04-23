@@ -12,6 +12,7 @@ import (
 	"github.com/snipedev/ems/Incident-service/internals"
 	"github.com/snipedev/ems/Incident-service/pkg/db"
 	"github.com/snipedev/ems/Incident-service/pkg/models"
+	"github.com/snipedev/ems/Incident-service/visibility"
 )
 
 func loadconfig() {
@@ -31,6 +32,8 @@ func main() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	r.Use(visibility.PrometheusMiddleware())
 
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
